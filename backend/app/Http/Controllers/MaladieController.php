@@ -37,10 +37,10 @@ class MaladieController extends Controller
         $maladie = Maladie::findOrFail($id);
 
         $validatedData = $request->validate([
-            'famille_malade' => 'sometimes|required|string|max:255',
-            'sous_famille' => 'sometimes|required|string|max:255',
-            'designation' => 'sometimes|required|string|max:255',
-            'prix_traitement' => 'sometimes|required|string|max:255',
+            'famille_malade' => 'required|string|max:255',
+            'sous_famille' => 'required|string|max:255',
+            'designation' => 'required|string|max:255',
+            'prix_traitement' => 'required|string|max:255',
         ]);
 
         $maladie->update($validatedData);

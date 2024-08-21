@@ -7,59 +7,66 @@ use Illuminate\Http\Request;
 
 class PersonnelSoignantController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $personnelSoignants = Personnel_soignant::all();
+        return response()->json($personnelSoignants);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nom_per' => 'required|string|max:255',
+            'post_no_per' => 'required|string|max:255',
+            'sex_pers' => 'required|string|max:10',
+            'garde_pers' => 'required|string|max:255',
+            'function_pers' => 'required|string|max:255',
+            'telphon_person' => 'required|string|max:15',
+            'email_pers' => 'required|string|email|max:255|unique:personnel_soignants',
+            'adress_pers' => 'required|string|max:255',
+            'date_naisanse' => 'required|date',
+            'date_recutment_pers' => 'required|date',
+            'id_servise' => 'required|exists:services,id',
+        ]);
+
+        $personnelSoignant = Personnel_soignant::create($request->all());
+
+        return response()->json($personnelSoignant, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(personnel_soignant $personnel_soignant)
+    public function show($id)
     {
-        //
+        $personnelSoignant = Personnel_soignant::all()->findOrFail($id);
+        return response()->json($personnelSoignant);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(personnel_soignant $personnel_soignant)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'nom_per' => 'required|string|max:255',
+            'post_no_per' => 'required|string|max:255',
+            'sex_pers' => 'required|string|max:10',
+            'garde_pers' => 'required|string|max:255',
+            'function_pers' => 'required|string|max:255',
+            'telphon_person' => 'required|string|max:15',
+            'email_pers' => 'required|string|email|max:255|unique:personnel_soignants,email_pers,' . $id,
+            'adress_pers' => 'required|string|max:255',
+            'date_naisanse' => 'required|date',
+            'date_recutment_pers' => 'required|date',
+            'id_servise' => 'required|exists:services,id',
+        ]);
+
+        $personnelSoignant = Personnel_soignant::findOrFail($id);
+        $personnelSoignant->update($request->all());
+
+        return response()->json($personnelSoignant);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, personnel_soignant $personnel_soignant)
+    public function destroy($id)
     {
-        //
-    }
+        $personnelSoignant = Personnel_soignant::findOrFail($id);
+        $personnelSoignant->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(personnel_soignant $personnel_soignant)
-    {
-        //
+        return response()->json(null, 204);
     }
 }

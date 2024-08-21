@@ -11,6 +11,14 @@ use App\Models\reception;
 class doctore extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'full_name',
+        'adress',
+        'tealphon',
+        'email',
+        'date_debute_travaill',
+        'date_fin_travaill',
+    ];
     public function patients()
     {
         return $this->hasMany(patient_per::class, 'id_doctore');

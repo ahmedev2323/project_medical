@@ -16,13 +16,14 @@ class reception extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id_pat',
-        'id_per',
-        'id_doctore',
+        
         'type_consult',
         'observation',
         'frais_consult',
         'date_consult',
+        'id_pat',
+        'id_per',
+        'id_doctore',
     ];
 
     public function patient()

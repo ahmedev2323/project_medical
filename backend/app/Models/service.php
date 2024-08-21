@@ -9,6 +9,9 @@ use App\Models\personnel_soignant;
 class service extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'desgination_serv',
+    ];
     public function personnels()
     {
         return $this->hasMany(personnel_soignant::class, 'id_servise');

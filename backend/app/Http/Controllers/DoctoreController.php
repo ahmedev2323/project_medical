@@ -7,59 +7,56 @@ use Illuminate\Http\Request;
 
 class DoctoreController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $doctors = Doctore::all();
+        return response()->json($doctors);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'full_name' => 'required|string|max:255',
+            'adress' => 'required|string|max:255',
+            'tealphon' => 'required|string|max:15',
+            'email' => 'required|string|email|max:255|unique:doctores',
+            'date_debute_travaill' => 'required|date',
+            'date_fin_travaill' => 'nullable|date',
+        ]);
+
+        $doctor = Doctore::create($request->all());
+
+        return response()->json($doctor, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(doctore $doctore)
+    public function show($id)
     {
-        //
+        $doctor = Doctore::findOrFail($id);
+        return response()->json($doctor);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(doctore $doctore)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'full_name' => 'required|string|max:255',
+            'adress' => 'required|string|max:255',
+            'tealphon' => 'required|string|max:15',
+            'email' => 'required|string|email|max:255|unique:doctores,email,' . $id,
+            'date_debute_travaill' => 'required|date',
+            'date_fin_travaill' => 'nullable|date',
+        ]);
+
+        $doctor = Doctore::findOrFail($id);
+        $doctor->update($request->all());
+
+        return response()->json($doctor);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, doctore $doctore)
+    public function destroy($id)
     {
-        //
-    }
+        $doctor = Doctore::findOrFail($id);
+        $doctor->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(doctore $doctore)
-    {
-        //
+        return response()->json(null, 204);
     }
 }

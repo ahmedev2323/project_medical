@@ -7,59 +7,58 @@ use Illuminate\Http\Request;
 
 class ReceptionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $receptions = Reception::all();
+        return response()->json($receptions);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'type_consult' => 'required|string|max:255',
+            'observation' => 'required|string',
+            'frais_consult' => 'required|numeric',
+            'date_consult' => 'required|date',
+            'id_pat' => 'required|exists:patient_pers,id',
+            'id_per' => 'required|exists:infermiers,id',
+            'id_doctore' => 'required|exists:doctores,id',
+        ]);
+
+        $reception = reception::create($request->all());
+
+        return response()->json($reception, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(reception $reception)
+    public function show($id)
     {
-        //
+        $reception = Reception::all()->findOrFail($id);
+        return response()->json($reception);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(reception $reception)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'type_consult' => 'required|string|max:255',
+            'observation' => 'required|string',
+            'frais_consult' => 'required|numeric',
+            'date_consult' => 'required|date',
+            'id_pat' => 'required|exists:patient_pers,id',
+            'id_per' => 'required|exists:infermiers,id',
+            'id_doctore' => 'required|exists:doctores,id',
+        ]);
+
+        $reception = reception::findOrFail($id);
+        $reception->update($request->all());
+
+        return response()->json($reception);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, reception $reception)
+    public function destroy($id)
     {
-        //
-    }
+        $reception = reception::findOrFail($id);
+        $reception->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(reception $reception)
-    {
-        //
+        return response()->json(null, 204);
     }
 }

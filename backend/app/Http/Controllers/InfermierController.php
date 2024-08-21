@@ -7,59 +7,60 @@ use Illuminate\Http\Request;
 
 class InfermierController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $infermiers = Infermier::all();
+        return response()->json($infermiers);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nom_infe' => 'required|string|max:255',
+            'sex' => 'required|string|max:10',
+            'age' => 'required|integer|min:18',
+            'date_recrt' => 'required|date',
+            'adress' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:infermiers',
+            'telphon' => 'required|string|max:15',
+            'id_mal' => 'required|exists:maladies,id',
+        ]);
+
+        $infermier = Infermier::create($request->all());
+
+        return response()->json($infermier, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(infermier $infermier)
+    public function show($id)
     {
-        //
+        $infermier = Infermier::all()->findOrFail($id);
+        return response()->json($infermier);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(infermier $infermier)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'nom_infe' => 'required|string|max:255',
+            'sex' => 'required|string|max:10',
+            'age' => 'required|integer|min:18',
+            'date_recrt' => 'required|date',
+            'adress' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:infermiers,email,' . $id,
+            'telphon' => 'required|string|max:15',
+            'id_mal' => 'required|exists:maladies,id',
+        ]);
+
+        $infermier = Infermier::findOrFail($id);
+        $infermier->update($request->all());
+
+        return response()->json($infermier);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, infermier $infermier)
+    public function destroy($id)
     {
-        //
-    }
+        $infermier = Infermier::findOrFail($id);
+        $infermier->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(infermier $infermier)
-    {
-        //
+        return response()->json(null, 204);
     }
 }
